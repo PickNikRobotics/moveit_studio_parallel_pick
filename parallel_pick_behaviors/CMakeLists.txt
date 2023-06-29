@@ -6,34 +6,32 @@ find_package(moveit_common REQUIRED)
 moveit_package()
 
 find_package(moveit_studio_behavior_interface REQUIRED)
+find_package(moveit_task_constructor_core REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2_eigen REQUIRED)
-find_package(yaml-cpp REQUIRED)
 
 set(
   THIS_PACKAGE_INCLUDE_DEPENDS
   moveit_studio_behavior_interface
+  moveit_task_constructor_core
   pluginlib
   sensor_msgs
   tf2_eigen
-  yaml-cpp
 )
 
 # AprilTag Behavior
-add_library(
-  parallel_pick_behaviors SHARED
+add_library(parallel_pick_behaviors SHARED
   src/get_current_planning_scene.cpp
   src/setup_mtc_fixed_joint_state.cpp
   src/register_behaviors.cpp
 )
-target_include_directories(
-  parallel_pick_behaviors
+target_include_directories(parallel_pick_behaviors
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PUBLIC $<INSTALL_INTERFACE:include>
 )
 ament_target_dependencies(parallel_pick_behaviors ${THIS_PACKAGE_INCLUDE_DEPENDS})
-target_link_libraries(parallel_pick_behaviors ${YAML_CPP_LIBRARIES})
+target_compile_features(parallel_pick_behaviors PUBLIC cxx_std_17)
 
 # Install Libraries
 install(

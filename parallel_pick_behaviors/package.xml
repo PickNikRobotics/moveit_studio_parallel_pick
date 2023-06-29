@@ -14,6 +14,7 @@
   <build_depend>moveit_common</build_depend>
 
   <depend>moveit_studio_behavior_interface</depend>
+  <depend>moveit_task_constructor_core</depend>
   <depend>sensor_msgs</depend>
   <depend>tf2_eigen</depend>
 

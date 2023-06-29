@@ -5,6 +5,7 @@ ament_add_gtest(
   test_behavior_plugins.cpp
 )
 ament_target_dependencies(test_behavior_plugins ${THIS_PACKAGE_INCLUDE_DEPENDS})
+target_compile_features(test_behavior_plugins PRIVATE cxx_std_17)
 
 # Needed to link against the source behaviors
 # target_link_libraries(test_behavior_plugins)
