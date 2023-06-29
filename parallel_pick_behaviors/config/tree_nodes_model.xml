@@ -1,5 +1,23 @@
 <root>
     <TreeNodesModel>
-        <!--  TODO: put behavior info here -->
+        <Action ID="SetupMTCFixedJointState">
+            <metadata subcategory="MTC"/>
+            <description>
+                <p>
+                    Given an existing MTC Task object, appends an MTC FixedState Stage to the Task.
+                </p>
+            </description>
+            <input_port name="planning_scene_msg" default="{planning_scene}">Planning scene message.</input_port>
+            <input_port name="joint_state_msg" default="{target_joint_state}">Joint state to set in the fixed scene state.</input_port>
+            <inout_port name="task" default="{mtc_task}">MoveIt Task Constructor task.</inout_port>
+        </Action>
+        <Action ID="GetCurrentPlanningScene">
+            <description>
+                <p>
+                    Get the current planning scene.
+                </p>
+            </description>
+            <output_port name="planning_scene_msg" default="{planning_scene">Planning scene message.</output_port>
+        </Action>
     </TreeNodesModel>
 </root>
