@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root BTCPP_format="4" main_tree_to_execute="MTC Fixed State Demo">
+  <!-- ////////// -->
+  <BehaviorTree ID="MTC Fixed State Demo" _favorite="true">
+    <Control ID="Sequence" name="TopLevelSequence">
+      <Control ID="Sequence">
+        <Action ID="Script" code="task1_planned:=false"/>
+        <Action ID="Script" code="task2_planned:=false"/>
+        <Action ID="MoveToJointState" waypoint_name="Behind" planning_group_name="manipulator" controller_names="/joint_trajectory_controller /robotiq_gripper_controller"/>
+        <Action ID="GetCurrentPlanningScene" planning_scene_msg="{planning_scene}"/>
+        <Action ID="RetrieveWaypoint" waypoint_name="Behind" waypoint_joint_state="{joint_state_home}"/>
+        <Action ID="RetrieveWaypoint" waypoint_name="Pick Block" waypoint_joint_state="{joint_state_pick}"/>
+        <Action ID="RetrieveWaypoint" waypoint_name="Place Block" waypoint_joint_state="{joint_state_place}"/>
+      </Control>
+      <Control ID="Parallel" success_count="2" failure_count="1">
+        <Control ID="Sequence">
+          <Control ID="Sequence">
+            <Action ID="InitializeMTCTask" task_id="task1" controller_names="/joint_trajectory_controller /robotiq_gripper_controller" task="{task1}"/>
+            <Action ID="SetupMTCFixedJointState" planning_scene_msg="{planning_scene}" joint_state_msg="{joint_state_home}" task="{task1}"/>
+            <Action ID="SetupMTCMoveToJointState" planning_group_name="manipulator" joint_state="{joint_state_pick}" task="{task1}"/>
+            <Action ID="SetupMTCMoveToJointState" planning_group_name="manipulator" joint_state="{joint_state_home}" task="{task1}"/>
+            <Action ID="WaitForDuration" delay_duration="3"/>
+            <Action ID="PlanMTCTask" task="{task1}" solution="{solution1}"/>
+            <Action ID="Script" code="task1_planned:=true"/>
+          </Control>
+          <Control ID="Sequence">
+            <Action ID="InitializeMTCTask" task_id="task2" controller_names="/joint_trajectory_controller /robotiq_gripper_controller" task="{task2}"/>
+            <Action ID="SetupMTCFixedJointState" planning_scene_msg="{planning_scene}" joint_state_msg="{joint_state_home}" task="{task2}"/>
+            <Action ID="SetupMTCMoveToJointState" planning_group_name="manipulator" joint_state="{joint_state_place}" task="{task2}"/>
+            <Action ID="SetupMTCMoveToJointState" planning_group_name="manipulator" joint_state="{joint_state_home}" task="{task2}"/>
+            <Action ID="WaitForDuration" delay_duration="5"/>
+            <Action ID="PlanMTCTask" task="{task2}" solution="{solution2}"/>
+            <Action ID="Script" code="task2_planned:=true"/>
+          </Control>
+        </Control>
+        <Control ID="Sequence">
+          <Decorator ID="RetryUntilSuccessful" num_attempts="100">
+            <Control ID="Fallback">
+              <Decorator ID="Precondition" if="task1_planned" else="FAILURE">
+                <Action ID="AlwaysSuccess"/>
+              </Decorator>
+              <Decorator ID="ForceFailure">
+                <Action ID="WaitForDuration" delay_duration="1"/>
+              </Decorator>
+            </Control>
+          </Decorator>
+          <Action ID="ExecuteMTCTask" solution="{solution1}"/>
+          <Decorator ID="RetryUntilSuccessful" num_attempts="100">
+            <Control ID="Fallback">
+              <Decorator ID="Precondition" if="task2_planned" else="FAILURE">
+                <Action ID="AlwaysSuccess"/>
+              </Decorator>
+              <Decorator ID="ForceFailure">
+                <Action ID="WaitForDuration" delay_duration="1"/>
+              </Decorator>
+            </Control>
+          </Decorator>
+          <Action ID="ExecuteMTCTask" solution="{solution2}"/>
+        </Control>
+      </Control>
+    </Control>
+  </BehaviorTree>
+</root>
