@@ -1,0 +1,41 @@
+#
+#  This contains information for a unique instance of a robot.
+#
+
+# Name of the package to specialize
+based_on_package: "picknik_ur_base_config"
+
+hardware:
+  type: "ur5"
+  ip: 192.168.14.11
+  simulated: ${MOCK_HARDWARE:-true}
+  camera_config_file:
+    package: "picknik_008_ur5_parallel_pick_config"
+    path: "config/cameras.yaml"
+  robot_description:
+    urdf:
+      package: "picknik_008_ur5_parallel_pick_config"
+      path: "description/picknik_008_ur.xacro"
+    urdf_params:
+      - name: "ur5"
+      - has_tool_changer: "false"
+      - joint_limits_parameters_file:
+          package: "picknik_008_ur5_parallel_pick_config"
+          path: "config/moveit/joint_limits.yaml"
+
+moveit_params:
+  joint_limits:
+    package: "picknik_008_ur5_parallel_pick_config"
+    path: "config/moveit/joint_limits.yaml"
+
+objectives:
+  waypoints_file:
+    package_name: "picknik_008_ur5_parallel_pick_config"
+    relative_path: "waypoints/waypoints.yaml"
+  objective_library_paths:
+    003:
+      package_name: "picknik_008_ur5_parallel_pick_config"
+      relative_path: "objectives"
+  behavior_loader_plugins:
+    parallel_pick_behaviors:
+      - "parallel_pick_behaviors::ParallelPickBehaviorsLoader"
