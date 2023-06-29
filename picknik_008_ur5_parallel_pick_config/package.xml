@@ -12,6 +12,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>picknik_ur_base_config</depend>
+  <depend>parallel_pick_behaviors</depend>
 
   <test_depend>ament_lint_auto</test_depend>
 

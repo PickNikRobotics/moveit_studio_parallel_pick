@@ -17,7 +17,7 @@
                     Get the current planning scene.
                 </p>
             </description>
-            <output_port name="planning_scene_msg" default="{planning_scene">Planning scene message.</output_port>
+            <output_port name="planning_scene_msg" default="{planning_scene}">Planning scene message.</output_port>
         </Action>
     </TreeNodesModel>
 </root>

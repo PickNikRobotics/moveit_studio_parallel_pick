@@ -22,7 +22,7 @@
 namespace
 {
 constexpr auto kPortIDPlanningSceneMsg = "planning_scene_msg";
-constexpr auto kPortIDJointState = "joint_state";
+constexpr auto kPortIDJointState = "joint_state_msg";
 constexpr auto kPortIDTask = "task";
 
 // NOTE: this is just set to 'current state' to ensure compatibility with other MTC-based behaviors that expect the first stage to be named this
@@ -55,6 +55,7 @@ BT::NodeStatus SetupMTCFixedJointState::tick()
   // Check that all required input data ports were set
   if (const auto error = moveit_studio::behaviors::maybe_error(planning_scene_msg, joint_state, task); error)
   {
+    std::cout << error.value() << std::endl;
     return BT::NodeStatus::FAILURE;
   }
 
@@ -63,6 +64,7 @@ BT::NodeStatus SetupMTCFixedJointState::tick()
   const auto scene = std::make_shared<planning_scene::PlanningScene>(robot_model);
 	if (!scene->setPlanningSceneMsg(planning_scene_msg.value()))
   {
+    std::cout << "Failed to create planning scene message" << std::endl;
     return BT::NodeStatus::FAILURE;
   }
 
@@ -75,6 +77,7 @@ BT::NodeStatus SetupMTCFixedJointState::tick()
   }
   catch(const std::exception& e)
   {
+    std::cout << e.what() << std::endl;
     return BT::NodeStatus::FAILURE;
   }
 
