@@ -18,13 +18,15 @@ TEST(ParallelPickBehaviors, test_load_behavior_plugins)
 
   BT::BehaviorTreeFactory factory;
   {
-    // auto plugin_instance = class_loader.createUniqueInstance("setup_mtc_pick_from_pose::SetupMtcPickFromPoseBehaviorsLoader");
-    // ASSERT_NO_THROW(plugin_instance->registerBehaviors(factory, shared_resources));
+    auto plugin_instance = class_loader.createUniqueInstance("parallel_pick_behaviors::ParallelPickBehaviorsLoader");
+    ASSERT_NO_THROW(plugin_instance->registerBehaviors(factory, shared_resources));
   }
 
   // Test that ClassLoader is able to find and instantiate each behavior using the package's plugin description info.
-  // factory.instantiateTreeNode("test_behavior_name", "SetupMtcPickFromPose",
-  //                             BT::NodeConfiguration());
+  factory.instantiateTreeNode("test_behavior_name", "SetupMTCFixedJointState",
+                              BT::NodeConfiguration());
+  factory.instantiateTreeNode("test_behavior_name", "GetCurrentPlanningScene",
+                            BT::NodeConfiguration());
 }
 
 int main(int argc, char **argv)

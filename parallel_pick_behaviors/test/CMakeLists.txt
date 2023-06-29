@@ -7,4 +7,4 @@ ament_add_gtest(
 ament_target_dependencies(test_behavior_plugins ${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 # Needed to link against the source behaviors
-target_link_libraries(test_behavior_plugins)
+# target_link_libraries(test_behavior_plugins)

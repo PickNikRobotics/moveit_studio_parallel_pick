@@ -2,9 +2,12 @@
 #include <moveit_studio_behavior_interface/behavior_context.hpp>
 #include <moveit_studio_behavior_interface/shared_resources_node_loader.hpp>
 
+#include <parallel_pick_behaviors/get_current_planning_scene.hpp>
+#include <parallel_pick_behaviors/setup_mtc_fixed_joint_state.hpp>
+
 #include <pluginlib/class_list_macros.hpp>
 
-namespace setup_mtc_pick_from_pose
+namespace parallel_pick_behaviors
 {
   class ParallelPickBehaviorsLoader : public moveit_studio::behaviors::SharedResourcesNodeLoaderBase
   {
@@ -14,11 +17,11 @@ namespace setup_mtc_pick_from_pose
     {
       using namespace moveit_studio::behaviors;
 
-      // TODO: register custom behaviors
-      // registerBehavior<SetupMtcPickFromPose>(factory, "SetupMtcPickFromPose", shared_resources);
+      registerBehavior<GetCurrentPlanningScene>(factory, "GetCurrentPlanningScene", shared_resources);
+      registerBehavior<SetupMTCFixedJointState>(factory, "SetupMTCFixedJointState");
     }
   };
 } // namespace setup_mtc_pick_from_pose
 
-PLUGINLIB_EXPORT_CLASS(setup_mtc_pick_from_pose::ParallelPickBehaviorsLoader,
+PLUGINLIB_EXPORT_CLASS(parallel_pick_behaviors::ParallelPickBehaviorsLoader,
                        moveit_studio::behaviors::SharedResourcesNodeLoaderBase);

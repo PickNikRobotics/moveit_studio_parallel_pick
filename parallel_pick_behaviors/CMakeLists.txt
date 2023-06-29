@@ -23,6 +23,8 @@ set(
 # AprilTag Behavior
 add_library(
   parallel_pick_behaviors SHARED
+  src/get_current_planning_scene.cpp
+  src/setup_mtc_fixed_joint_state.cpp
   src/register_behaviors.cpp
 )
 target_include_directories(

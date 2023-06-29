@@ -1,5 +1,5 @@
-<library path="setup_mtc_pick_from_pose">
-  <class type="setup_mtc_pick_from_pose::SetupMtcPickFromPoseBehaviorsLoader"
+<library path="parallel_pick_behaviors">
+  <class type="parallel_pick_behaviors::ParallelPickBehaviorsLoader"
          base_class_type="moveit_studio::behaviors::SharedResourcesNodeLoaderBase">
   </class>
 </library>
