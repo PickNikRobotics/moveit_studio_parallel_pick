@@ -19,5 +19,14 @@
             </description>
             <output_port name="planning_scene_msg" default="{planning_scene}">Planning scene message.</output_port>
         </Action>
+        <Action ID="WaitAndPopSolutionQueue">
+            <description>
+                <p>
+                    Wait for solution queue to contain values, pop queue and write the next solution to output port.
+                </p>
+            </description>
+            <inout_port name="solution_queue" default="{solution_queue}">Solution queue to be read and popped.</inout_port>
+            <output_port name="solution" default="{solution}">First element of the solution queue.</output_port>
+        </Action>
     </TreeNodesModel>
 </root>
