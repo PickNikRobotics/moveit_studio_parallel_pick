@@ -4,7 +4,7 @@
 // Unauthorized copying of this code base via any medium is strictly prohibited.
 // Proprietary and confidential.
 
-#include <parallel_pick_behaviors/wait_and_pop_solution_queue.hpp>
+#include <parallel_pick_behaviors/push_to_solution_queue.hpp>
 
 #include <behaviortree_cpp/basic_types.h>
 
