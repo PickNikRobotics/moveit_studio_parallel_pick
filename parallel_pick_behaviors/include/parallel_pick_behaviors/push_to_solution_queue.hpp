@@ -9,7 +9,7 @@
 #include <behaviortree_cpp/action_node.h>
 #include <behaviortree_cpp/basic_types.h>
 
-namespace moveit_studio::behaviors
+namespace parallel_pick_behaviors
 {
 /**
  * @brief Push a new solution to the solution queue
@@ -35,4 +35,4 @@ public:
   BT::NodeStatus tick() override;
 
 };
-}  // namespace moveit_studio::behaviors
+}  // namespace parallel_pick_behaviors

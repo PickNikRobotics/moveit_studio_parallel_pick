@@ -19,11 +19,10 @@ constexpr auto kPortQueue = "solution_queue";
 constexpr auto kPortSolution = "solution";
 }  // namespace
 
-namespace moveit_studio::behaviors
+namespace parallel_pick_behaviors
 {
-WaitAndPopSolutionQueue::WaitAndPopSolutionQueue(const std::string& name, const BT::NodeConfiguration& config,
-                                                 const std::shared_ptr<BehaviorContext>& shared_resources)
-  : AsyncBehaviorBase(name, config, shared_resources)
+WaitAndPopSolutionQueue::WaitAndPopSolutionQueue(const std::string& name, const BT::NodeConfiguration& config)
+  : BT::ActionNodeBase(name, config)
 {
 }
 
@@ -33,19 +32,19 @@ BT::PortsList WaitAndPopSolutionQueue::providedPorts()
            BT::OutputPort<moveit_task_constructor_msgs::msg::Solution>(kPortSolution) };
 }
 
-fp::Result<bool> WaitAndPopSolutionQueue::doWork()
+BT::NodeStatus WaitAndPopSolutionQueue::tick()
 {
   // Get and validate required inputs
   auto solution_queue_input = getInput<std::queue<moveit_task_constructor_msgs::msg::Solution>>(kPortQueue);
-  if (const auto error = maybe_error(solution_queue_input); error)
+  if (const auto error = moveit_studio::behaviors::maybe_error(solution_queue_input); error)
   {
-    return tl::make_unexpected(fp::Internal("Failed to get required values from input data ports: " + error.value()));
+    return BT::NodeStatus::FAILURE;
   }
 
   // If the queue is empty the Node will return running
   if (solution_queue_input.value().empty())
   {
-    return false;
+    return BT::NodeStatus::RUNNING;
   }
 
   // Push the task solution in the queue to the output port.
@@ -54,11 +53,11 @@ fp::Result<bool> WaitAndPopSolutionQueue::doWork()
 
   // Write updated queue back to the blackboard
   setOutput(kPortQueue, std::move(solution_queue_input.value()));
-  return true;
+  return BT::NodeStatus::SUCCESS;
 }
 
-fp::Result<void> WaitAndPopSolutionQueue::doHalt()
+void WaitAndPopSolutionQueue::halt()
 {
-  return {};
+  return;
 }
-}  // namespace moveit_studio::behaviors
+}  // namespace parallel_pick_behaviors

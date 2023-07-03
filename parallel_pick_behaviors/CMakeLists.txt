@@ -23,10 +23,10 @@ set(
 # AprilTag Behavior
 add_library(parallel_pick_behaviors SHARED
   src/get_current_planning_scene.cpp
-  src/setup_mtc_fixed_joint_state.cpp
-  src/register_behaviors.cpp
-  src/wait_and_pop_solution_queue.cpp
   src/push_to_solution_queue.cpp
+  src/register_behaviors.cpp
+  src/setup_mtc_fixed_joint_state.cpp
+  src/wait_and_pop_solution_queue.cpp
 )
 target_include_directories(parallel_pick_behaviors
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

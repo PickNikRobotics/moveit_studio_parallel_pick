@@ -23,10 +23,14 @@ TEST(ParallelPickBehaviors, test_load_behavior_plugins)
   }
 
   // Test that ClassLoader is able to find and instantiate each behavior using the package's plugin description info.
+  factory.instantiateTreeNode("test_behavior_name", "PushToSolutionQueue",
+                              BT::NodeConfiguration());
   factory.instantiateTreeNode("test_behavior_name", "SetupMTCFixedJointState",
                               BT::NodeConfiguration());
   factory.instantiateTreeNode("test_behavior_name", "GetCurrentPlanningScene",
                             BT::NodeConfiguration());
+  factory.instantiateTreeNode("test_behavior_name", "WaitAndPopSolutionQueue",
+                              BT::NodeConfiguration());
 }
 
 int main(int argc, char **argv)

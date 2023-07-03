@@ -3,7 +3,9 @@
 #include <moveit_studio_behavior_interface/shared_resources_node_loader.hpp>
 
 #include <parallel_pick_behaviors/get_current_planning_scene.hpp>
+#include <parallel_pick_behaviors/push_to_solution_queue.hpp>
 #include <parallel_pick_behaviors/setup_mtc_fixed_joint_state.hpp>
+#include <parallel_pick_behaviors/wait_and_pop_solution_queue.hpp>
 
 #include <pluginlib/class_list_macros.hpp>
 
@@ -18,7 +20,9 @@ namespace parallel_pick_behaviors
       using namespace moveit_studio::behaviors;
 
       registerBehavior<GetCurrentPlanningScene>(factory, "GetCurrentPlanningScene", shared_resources);
+      registerBehavior<PushToSolutionQueue>(factory, "PushToSolutionQueue");
       registerBehavior<SetupMTCFixedJointState>(factory, "SetupMTCFixedJointState");
+      registerBehavior<WaitAndPopSolutionQueue>(factory, "WaitAndPopSolutionQueue");
     }
   };
 } // namespace setup_mtc_pick_from_pose

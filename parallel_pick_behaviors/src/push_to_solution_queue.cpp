@@ -20,7 +20,7 @@ constexpr auto kPortQueue = "solution_queue";
 constexpr auto kPortSolution = "solution";
 }  // namespace
 
-namespace moveit_studio::behaviors
+namespace parallel_pick_behaviors
 {
 PushToSolutionQueue::PushToSolutionQueue(const std::string& name, const BT::NodeConfiguration& config)
   : BT::SyncActionNode(name, config)
@@ -39,7 +39,7 @@ BT::NodeStatus PushToSolutionQueue::tick()
   const auto solution_input = getInput<moveit_task_constructor_msgs::msg::Solution>(kPortSolution);
   auto solution_queue_input = getInput<std::queue<moveit_task_constructor_msgs::msg::Solution>>(kPortQueue);
 
-  if (const auto error = maybe_error(solution_queue_input, solution_queue_input); error)
+  if (const auto error = moveit_studio::behaviors::maybe_error(solution_queue_input, solution_queue_input); error)
   {
     return BT::NodeStatus::FAILURE;
   }
@@ -50,4 +50,4 @@ BT::NodeStatus PushToSolutionQueue::tick()
   setOutput(kPortQueue, std::move(solution_queue_input.value()));
   return BT::NodeStatus::SUCCESS;
 }
-}  // namespace moveit_studio::behaviors
+}  // namespace parallel_pick_behaviors
