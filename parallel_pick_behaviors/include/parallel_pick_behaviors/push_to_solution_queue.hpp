@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <moveit_studio_behavior_interface/async_behavior_base.hpp>
+#include <behaviortree_cpp/action_node.h>
+#include <behaviortree_cpp/basic_types.h>
 
 namespace moveit_studio::behaviors
 {
@@ -19,33 +20,19 @@ namespace moveit_studio::behaviors
  * | solution         | Input            | moveit_task_constructor_msgs::msg::Solution             |
  * | solution queue   | Input/Output     | std::queue<moveit_task_constructor_msgs::msg::Solution> |
  */
-class PushToSolutionQueue final : public AsyncBehaviorBase
+class PushToSolutionQueue final : public BT::SyncActionNode
 {
 public:
-  PushToSolutionQueue(const std::string& name, const BT::NodeConfiguration& config,
-                      const std::shared_ptr<BehaviorContext>& shared_resources);
+  PushToSolutionQueue(const std::string& name, const BT::NodeConfiguration& config);
 
   static BT::PortsList providedPorts();
 
-private:
   /**
-   * @brief Read queue from the blackboard, push a new solution read from a second port to it and write it back to the blackboard
+   * @brief Read queue from the input data port, push a new solution read from a second port to it and write it back to the blackboard
+   * @return BT::NodeStatus::SUCCESS if successful.
+   * @return BT::NodeStatus::FAILURE if a value could not be retrieved from an input data port.
    */
-  fp::Result<bool> doWork() override;
+  BT::NodeStatus tick() override;
 
-  /**
-   * @brief Halts an in-progress planning process by preempting the stored MTC task.
-   * @return Always returns void, since preempting an MTC task always succeeds.
-   */
-  fp::Result<void> doHalt() override;
-
-  /** @brief Classes derived from AsyncBehaviorBase must implement getFuture() so that it returns a shared_future class member */
-  std::shared_future<fp::Result<bool>>& getFuture() override
-  {
-    return future_;
-  }
-
-  /** @brief Classes derived from AsyncBehaviorBase must have this shared_future as a class member */
-  std::shared_future<fp::Result<bool>> future_;
 };
 }  // namespace moveit_studio::behaviors

@@ -4,6 +4,7 @@
 // Unauthorized copying of this code base via any medium is strictly prohibited.
 // Proprietary and confidential.
 
+#include <behaviortree_cpp/action_node.h>
 #include <parallel_pick_behaviors/push_to_solution_queue.hpp>
 
 #include <behaviortree_cpp/basic_types.h>
@@ -21,9 +22,8 @@ constexpr auto kPortSolution = "solution";
 
 namespace moveit_studio::behaviors
 {
-PushToSolutionQueue::PushToSolutionQueue(const std::string& name, const BT::NodeConfiguration& config,
-                                         const std::shared_ptr<BehaviorContext>& shared_resources)
-  : AsyncBehaviorBase(name, config, shared_resources)
+PushToSolutionQueue::PushToSolutionQueue(const std::string& name, const BT::NodeConfiguration& config)
+  : BT::SyncActionNode(name, config)
 {
 }
 
@@ -33,30 +33,21 @@ BT::PortsList PushToSolutionQueue::providedPorts()
            BT::InputPort<moveit_task_constructor_msgs::msg::Solution>(kPortSolution) };
 }
 
-fp::Result<bool> PushToSolutionQueue::doWork()
+BT::NodeStatus PushToSolutionQueue::tick()
 {
   // Get and validate required inputs
+  const auto solution_input = getInput<moveit_task_constructor_msgs::msg::Solution>(kPortSolution);
   auto solution_queue_input = getInput<std::queue<moveit_task_constructor_msgs::msg::Solution>>(kPortQueue);
-  if (const auto error = maybe_error(solution_queue_input); error)
-  {
-    return tl::make_unexpected(fp::Internal("Failed to get required values from input data ports: " + error.value()));
-  }
 
-  auto const solution_input = getInput<moveit_task_constructor_msgs::msg::Solution>(kPortSolution);
-  if (const auto error = maybe_error(solution_input); error)
+  if (const auto error = maybe_error(solution_queue_input, solution_queue_input); error)
   {
-    return tl::make_unexpected(fp::Internal("Failed to get required values from input data ports: " + error.value()));
+    return BT::NodeStatus::FAILURE;
   }
 
   solution_queue_input.value().push(solution_input.value());
 
   // Write updated queue back to the blackboard
   setOutput(kPortQueue, std::move(solution_queue_input.value()));
-  return true;
-}
-
-fp::Result<void> PushToSolutionQueue::doHalt()
-{
-  return {};
+  return BT::NodeStatus::SUCCESS;
 }
 }  // namespace moveit_studio::behaviors
