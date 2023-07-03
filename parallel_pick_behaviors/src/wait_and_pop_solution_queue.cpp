@@ -15,6 +15,7 @@
 
 namespace
 {
+constexpr auto kPortInterrupt = "fail_if_queue_empty";
 constexpr auto kPortQueue = "solution_queue";
 constexpr auto kPortSolution = "solution";
 }  // namespace
@@ -29,21 +30,30 @@ WaitAndPopSolutionQueue::WaitAndPopSolutionQueue(const std::string& name, const 
 BT::PortsList WaitAndPopSolutionQueue::providedPorts()
 {
   return { BT::BidirectionalPort<std::queue<moveit_task_constructor_msgs::msg::Solution>>(kPortQueue),
-           BT::OutputPort<moveit_task_constructor_msgs::msg::Solution>(kPortSolution) };
+           BT::OutputPort<moveit_task_constructor_msgs::msg::Solution>(kPortSolution),
+           BT::InputPort<bool>(kPortInterrupt),
+            };
 }
 
 BT::NodeStatus WaitAndPopSolutionQueue::tick()
 {
+  auto interrupt_input = getInput<bool>(kPortInterrupt);
+
   // Get and validate required inputs
   auto solution_queue_input = getInput<std::queue<moveit_task_constructor_msgs::msg::Solution>>(kPortQueue);
   if (const auto error = moveit_studio::behaviors::maybe_error(solution_queue_input); error)
   {
-    return BT::NodeStatus::FAILURE;
+    return BT::NodeStatus::RUNNING;
   }
 
   // If the queue is empty the Node will return running
   if (solution_queue_input.value().empty())
   {
+    if (interrupt_input.has_value() && interrupt_input.value())
+    {
+      return BT::NodeStatus::FAILURE;
+    }
+
     return BT::NodeStatus::RUNNING;
   }
 

@@ -34,6 +34,7 @@
                     Wait for solution queue to contain values, pop queue and write the next solution to output port.
                 </p>
             </description>
+            <input_port name="fail_if_queue_empty" default="false">Set to true to return failure if the queue is empty instead of waiting for a new entry to be pushed.</input_port>
             <inout_port name="solution_queue" default="{solution_queue}">Solution queue to be read and popped.</inout_port>
             <output_port name="solution" default="{solution}">First element of the solution queue.</output_port>
         </Action>
