@@ -70,10 +70,7 @@ BT::NodeStatus SetupMTCFixedJointState::tick()
 
   try
   {
-    moveit::core::RobotState current_state{robot_model};
-    current_state.setToDefaultValues();
-    current_state.setVariablePositions(joint_state.value().name, joint_state.value().position);
-    scene->setCurrentState(current_state);
+    scene->getCurrentStateNonConst().setVariablePositions(joint_state.value().name, joint_state.value().position);
   }
   catch(const std::exception& e)
   {
