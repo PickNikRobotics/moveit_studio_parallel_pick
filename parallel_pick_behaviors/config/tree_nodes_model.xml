@@ -1,5 +1,22 @@
 <root>
     <TreeNodesModel>
+        <Action ID="GetCurrentPlanningScene">
+            <description>
+                <p>
+                    Get the current planning scene.
+                </p>
+            </description>
+            <output_port name="planning_scene_msg" default="{planning_scene}">Planning scene message.</output_port>
+        </Action>
+        <Action ID="PushToSolutionQueue">
+            <description>
+                <p>
+                    Push a solution to a queue.
+                </p>
+            </description>
+            <input_port name="solution" default="{solution}">Solution to push to the queue.</input_port>
+            <inout_port name="solution_queue" default="{solution_queue}">Solution queue to be read and popped.</inout_port>
+        </Action>
         <Action ID="SetupMTCFixedJointState">
             <metadata subcategory="MTC"/>
             <description>
@@ -11,13 +28,15 @@
             <input_port name="joint_state_msg" default="{target_joint_state}">Joint state to set in the fixed scene state.</input_port>
             <inout_port name="task" default="{mtc_task}">MoveIt Task Constructor task.</inout_port>
         </Action>
-        <Action ID="GetCurrentPlanningScene">
+        <Action ID="WaitAndPopSolutionQueue">
             <description>
                 <p>
-                    Get the current planning scene.
+                    Wait for solution queue to contain values, pop queue and write the next solution to output port.
                 </p>
             </description>
-            <output_port name="planning_scene_msg" default="{planning_scene}">Planning scene message.</output_port>
+            <input_port name="fail_if_queue_empty" default="false">Set to true to return failure if the queue is empty instead of waiting for a new entry to be pushed.</input_port>
+            <inout_port name="solution_queue" default="{solution_queue}">Solution queue to be read and popped.</inout_port>
+            <output_port name="solution" default="{solution}">First element of the solution queue.</output_port>
         </Action>
     </TreeNodesModel>
 </root>
